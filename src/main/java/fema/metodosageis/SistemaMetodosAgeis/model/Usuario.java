@@ -40,7 +40,7 @@ public class Usuario {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private TipoUsuario tipo = TipoUsuario.ALUNO;
+    private TipoUsuario tipoUsuario;
 
     @OneToMany(mappedBy = "usuario")
     private List<TentativaProva> tentativasProva;

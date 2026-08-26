@@ -1,6 +1,6 @@
 package fema.metodosageis.SistemaMetodosAgeis.dto.dashboard;
 
-import fema.metodosageis.SistemaMetodosAgeis.dto.usuario.UsuarioResponseDTO;
+import fema.metodosageis.SistemaMetodosAgeis.dto.usuario.UsuarioCriadoDTO;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.Map;
@@ -17,5 +17,5 @@ public class DashboardDTO {
     private Map<String, Double> acertosPorSexo;
 
     // Para a lista de ranking:
-    private List<UsuarioResponseDTO> topAlunos;
+    private List<UsuarioCriadoDTO> topAlunos;
 }
