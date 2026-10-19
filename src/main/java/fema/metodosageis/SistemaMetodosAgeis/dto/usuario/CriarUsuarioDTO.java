@@ -11,5 +11,7 @@ public record CriarUsuarioDTO(
         @NotBlank
         String sexo,
         @NotBlank
-        String escolaridade
+        String escolaridade,
+        @NotBlank
+        String experiencia
 ) {}

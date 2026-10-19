@@ -1,6 +1,7 @@
 package fema.metodosageis.SistemaMetodosAgeis.model;
 
 import fema.metodosageis.SistemaMetodosAgeis.enums.Escolaridade;
+import fema.metodosageis.SistemaMetodosAgeis.enums.Experiencia;
 import fema.metodosageis.SistemaMetodosAgeis.enums.Sexo;
 import fema.metodosageis.SistemaMetodosAgeis.enums.TipoUsuario;
 import jakarta.persistence.*;
@@ -41,6 +42,10 @@ public class Usuario {
     @NotNull
     @Enumerated(EnumType.STRING)
     private TipoUsuario tipoUsuario;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Experiencia experiencia;
 
     @OneToMany(mappedBy = "usuario")
     private List<TentativaProva> tentativasProva;

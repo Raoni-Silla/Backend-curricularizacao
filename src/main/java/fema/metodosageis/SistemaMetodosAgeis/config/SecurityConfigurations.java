@@ -54,8 +54,10 @@ public class SecurityConfigurations {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // Quem pode fazer a requisição
-        configuration.setAllowedOrigins(List.of("http://localhost:4200",
-                "http://192.168.15.17:4200"));
+        configuration.setAllowedOriginPatterns(List.of(
+                "http://localhost:4200",
+                "http://*:4200"
+        ));
 
         // Quais métodos HTTP são permitidos
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
