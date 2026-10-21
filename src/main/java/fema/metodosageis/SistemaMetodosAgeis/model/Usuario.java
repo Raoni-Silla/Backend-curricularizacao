@@ -47,6 +47,8 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     private Experiencia experiencia;
 
+    private String senha;
+
     @OneToMany(mappedBy = "usuario")
     private List<TentativaProva> tentativasProva;
 

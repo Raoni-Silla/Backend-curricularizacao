@@ -13,6 +13,7 @@ import fema.metodosageis.SistemaMetodosAgeis.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -98,10 +99,10 @@ public class ExamService {
         Long id = obterIdUsuarioLogado();
         TentativaProva tentativaProva = tentativaProvaRepository.findById(dto.idTentativa()).orElseThrow(() -> new EntityNotFoundException("Impossivel encontrar essa tentativa"));
         if (!tentativaProva.getUsuario().getId().equals(id)){
-            throw new RuntimeException("Você não pertence a essa tentativa");
+            throw new AccessDeniedException("Você não pertence a essa tentativa");
         }
         if (tentativaProva.getStatus() != StatusProva.EM_ANDAMENTO){
-            throw new RuntimeException("essa prova ja foi expirada ou finalizada");
+            throw new IllegalArgumentException("Esta prova foi encerrada pelo organizador");
         }
         Prova prova = tentativaProva.getProva();
         for (Long idPergunta : dto.respostas().keySet()){
@@ -116,14 +117,14 @@ public class ExamService {
                 throw new IllegalArgumentException("Essa alternativa não pertence a essa pergunta");
             }
 
-                Resposta resposta = new Resposta();
-                resposta.setUsuario(usuarioRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Impossivel encontrar esse usuario")));
-                resposta.setTentativaProva(tentativaProva);
-                resposta.setPergunta(pergunta);
-                resposta.setCorreta(alternativa.isCorreta());
-                resposta.setRespondidoEm(LocalDateTime.now());
-                resposta.setAlternativa(alternativa);
-                respostaRepository.save(resposta);
+            Resposta resposta = new Resposta();
+            resposta.setUsuario(usuarioRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Impossivel encontrar esse usuario")));
+            resposta.setTentativaProva(tentativaProva);
+            resposta.setPergunta(pergunta);
+            resposta.setCorreta(alternativa.isCorreta());
+            resposta.setRespondidoEm(LocalDateTime.now());
+            resposta.setAlternativa(alternativa);
+            respostaRepository.save(resposta);
         }
         tentativaProva.setStatus(StatusProva.FINALIZADA);
         tentativaProva.setFim(LocalDateTime.now());

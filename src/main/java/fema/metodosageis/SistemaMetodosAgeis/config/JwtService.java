@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import fema.metodosageis.SistemaMetodosAgeis.model.Usuario;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -15,7 +16,8 @@ import java.time.ZoneOffset;
 public class JwtService {
 
     //é a minha senha secreta usada para assinar o token quando misturado o header e o payload
-    private final String secretKey = "chave secreta e segura";
+    @Value("${jwt.secret}")
+    private String secretKey;
 
 
     //quando o usuario faz login com sucesso, o spring chama esse metodo, entregando o objeto usuario

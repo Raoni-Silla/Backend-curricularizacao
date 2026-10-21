@@ -1,6 +1,7 @@
 package fema.metodosageis.SistemaMetodosAgeis.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -28,6 +29,9 @@ public class SecurityConfigurations {
 
     private final SecurityFilter securityFilter;
 
+    @Value("${app.cors.allowed-origins}")
+    private List<String> origensPermitidas;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -37,6 +41,8 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers("/api/exam/iniciarProva").permitAll();
                     req.requestMatchers("/api/exam/provaAtiva").permitAll();//rotas publicas
+                    req.requestMatchers("/api/admin/autenticar").permitAll();
+                    req.requestMatchers("/api/admin/**").authenticated();
                     req.anyRequest().authenticated(); //pra qqlqr outra rota exige identificação
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) // aqui eu digo que o spring deve usar o meu segurança primeiro
@@ -54,10 +60,7 @@ public class SecurityConfigurations {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // Quem pode fazer a requisição
-        configuration.setAllowedOriginPatterns(List.of(
-                "http://localhost:4200",
-                "http://*:4200"
-        ));
+        configuration.setAllowedOriginPatterns(origensPermitidas);
 
         // Quais métodos HTTP são permitidos
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));

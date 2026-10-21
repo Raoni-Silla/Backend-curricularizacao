@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="relatorio_prova" pageWidth="595" pageHeight="842" columnWidth="515"
+              leftMargin="40" rightMargin="40" topMargin="36" bottomMargin="36"
+              whenNoDataType="AllSectionsNoDetail">
+
+    <style name="Base" isDefault="true" fontName="DejaVu Sans" fontSize="9" forecolor="#334155"/>
+
+    <style name="Status" fontName="DejaVu Sans" fontSize="8" isBold="true" forecolor="#B45309">
+        <conditionalStyle>
+            <conditionExpression><![CDATA["Finalizada".equals($F{status})]]></conditionExpression>
+            <style forecolor="#047857"/>
+        </conditionalStyle>
+        <conditionalStyle>
+            <conditionExpression><![CDATA["Expirada".equals($F{status})]]></conditionExpression>
+            <style forecolor="#64748B"/>
+        </conditionalStyle>
+    </style>
+
+    <subDataset name="Experiencias">
+        <field name="nivel" class="java.lang.String"/>
+        <field name="quantidade" class="java.lang.Long"/>
+        <field name="media" class="java.lang.Long"/>
+    </subDataset>
+
+    <parameter name="GERADO_EM" class="java.lang.String"/>
+    <parameter name="PROVA_ATIVA" class="java.lang.Boolean"/>
+    <parameter name="TOTAL_PARTICIPANTES" class="java.lang.Long"/>
+    <parameter name="EM_ANDAMENTO" class="java.lang.Long"/>
+    <parameter name="FINALIZADAS" class="java.lang.Long"/>
+    <parameter name="EXPIRADAS" class="java.lang.Long"/>
+    <parameter name="MEDIA_ACERTOS" class="java.lang.Long"/>
+    <parameter name="EXPERIENCIAS" class="net.sf.jasperreports.engine.JRDataSource"/>
+
+    <field name="nome" class="java.lang.String"/>
+    <field name="idade" class="java.lang.Integer"/>
+    <field name="escolaridade" class="java.lang.String"/>
+    <field name="experiencia" class="java.lang.String"/>
+    <field name="status" class="java.lang.String"/>
+    <field name="inicio" class="java.lang.String"/>
+    <field name="acertos" class="java.lang.String"/>
+
+    <title>
+        <band height="270" splitType="Stretch">
+            <!-- Faixa do topo -->
+            <rectangle>
+                <reportElement mode="Opaque" x="0" y="0" width="515" height="68" backcolor="#172554"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <rectangle>
+                <reportElement mode="Opaque" x="0" y="68" width="515" height="3" backcolor="#F97316"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="18" y="14" width="280" height="14" forecolor="#BFDBFE"/>
+                <textElement verticalAlignment="Middle"><font size="8.5"/></textElement>
+                <text><![CDATA[Métodos Ágeis · FEMA]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="18" y="30" width="280" height="26" forecolor="#FFFFFF"/>
+                <textElement verticalAlignment="Middle"><font size="18" isBold="true"/></textElement>
+                <text><![CDATA[Relatório da prova]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="300" y="16" width="197" height="14" forecolor="#BFDBFE"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="8"/></textElement>
+                <textFieldExpression><![CDATA["Gerado em " + $P{GERADO_EM}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="300" y="34" width="197" height="18" forecolor="#FDBA74"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="10" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[Boolean.TRUE.equals($P{PROVA_ATIVA}) ? "Prova ativa" : "Prova encerrada"]]></textFieldExpression>
+            </textField>
+
+            <!-- Card: Participantes -->
+            <rectangle radius="6">
+                <reportElement mode="Opaque" x="0" y="90" width="95" height="58" forecolor="#E2E8F0" backcolor="#FFFFFF"/>
+                <graphicElement><pen lineWidth="0.75"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="10" y="100" width="80" height="12" forecolor="#64748B"/>
+                <textElement><font size="7.5"/></textElement>
+                <text><![CDATA[Participantes]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="10" y="116" width="80" height="24" forecolor="#172554"/>
+                <textElement verticalAlignment="Middle"><font size="18" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{TOTAL_PARTICIPANTES} != null ? $P{TOTAL_PARTICIPANTES}.toString() : "0"]]></textFieldExpression>
+            </textField>
+
+            <!-- Card: Em andamento -->
+            <rectangle radius="6">
+                <reportElement mode="Opaque" x="105" y="90" width="95" height="58" forecolor="#E2E8F0" backcolor="#FFFFFF"/>
+                <graphicElement><pen lineWidth="0.75"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="115" y="100" width="80" height="12" forecolor="#64748B"/>
+                <textElement><font size="7.5"/></textElement>
+                <text><![CDATA[Em andamento]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="115" y="116" width="80" height="24" forecolor="#172554"/>
+                <textElement verticalAlignment="Middle"><font size="18" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{EM_ANDAMENTO} != null ? $P{EM_ANDAMENTO}.toString() : "0"]]></textFieldExpression>
+            </textField>
+
+            <!-- Card: Finalizadas -->
+            <rectangle radius="6">
+                <reportElement mode="Opaque" x="210" y="90" width="95" height="58" forecolor="#E2E8F0" backcolor="#FFFFFF"/>
+                <graphicElement><pen lineWidth="0.75"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="220" y="100" width="80" height="12" forecolor="#64748B"/>
+                <textElement><font size="7.5"/></textElement>
+                <text><![CDATA[Finalizadas]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="220" y="116" width="80" height="24" forecolor="#172554"/>
+                <textElement verticalAlignment="Middle"><font size="18" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{FINALIZADAS} != null ? $P{FINALIZADAS}.toString() : "0"]]></textFieldExpression>
+            </textField>
+
+            <!-- Card: Expiradas -->
+            <rectangle radius="6">
+                <reportElement mode="Opaque" x="315" y="90" width="95" height="58" forecolor="#E2E8F0" backcolor="#FFFFFF"/>
+                <graphicElement><pen lineWidth="0.75"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="325" y="100" width="80" height="12" forecolor="#64748B"/>
+                <textElement><font size="7.5"/></textElement>
+                <text><![CDATA[Expiradas]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="325" y="116" width="80" height="24" forecolor="#172554"/>
+                <textElement verticalAlignment="Middle"><font size="18" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{EXPIRADAS} != null ? $P{EXPIRADAS}.toString() : "0"]]></textFieldExpression>
+            </textField>
+
+            <!-- Card: Média de acertos -->
+            <rectangle radius="6">
+                <reportElement mode="Opaque" x="420" y="90" width="95" height="58" forecolor="#E2E8F0" backcolor="#FFFFFF"/>
+                <graphicElement><pen lineWidth="0.75"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="430" y="100" width="80" height="12" forecolor="#64748B"/>
+                <textElement><font size="7.5"/></textElement>
+                <text><![CDATA[Média de acertos]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="430" y="116" width="80" height="24" forecolor="#EA580C"/>
+                <textElement verticalAlignment="Middle"><font size="18" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{MEDIA_ACERTOS} != null ? $P{MEDIA_ACERTOS} + "%" : "—"]]></textFieldExpression>
+            </textField>
+
+            <!-- Seção: por experiência -->
+            <staticText>
+                <reportElement x="0" y="170" width="515" height="18" forecolor="#172554"/>
+                <textElement verticalAlignment="Middle"><font size="11" isBold="true"/></textElement>
+                <text><![CDATA[Desempenho por nível de experiência]]></text>
+            </staticText>
+            <rectangle>
+                <reportElement mode="Opaque" x="0" y="194" width="515" height="20" backcolor="#F8FAFC"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="10" y="194" width="250" height="20" forecolor="#64748B"/>
+                <textElement verticalAlignment="Middle"><font size="7" isBold="true"/></textElement>
+                <text><![CDATA[NÍVEL DE EXPERIÊNCIA]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="270" y="194" width="110" height="20" forecolor="#64748B"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="7" isBold="true"/></textElement>
+                <text><![CDATA[PARTICIPANTES]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="390" y="194" width="115" height="20" forecolor="#64748B"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="7" isBold="true"/></textElement>
+                <text><![CDATA[MÉDIA DE ACERTOS]]></text>
+            </staticText>
+
+            <componentElement>
+                <reportElement x="0" y="214" width="515" height="22"/>
+                <jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+                         xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd"
+                         printOrder="Vertical">
+                    <datasetRun subDataset="Experiencias">
+                        <dataSourceExpression><![CDATA[$P{EXPERIENCIAS}]]></dataSourceExpression>
+                    </datasetRun>
+                    <jr:listContents height="22" width="515">
+                        <textField>
+                            <reportElement x="10" y="0" width="250" height="22"/>
+                            <textElement verticalAlignment="Middle"/>
+                            <textFieldExpression><![CDATA[$F{nivel}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement x="270" y="0" width="110" height="22" forecolor="#172554"/>
+                            <textElement textAlignment="Right" verticalAlignment="Middle"><font isBold="true"/></textElement>
+                            <textFieldExpression><![CDATA[$F{quantidade} != null ? $F{quantidade}.toString() : "0"]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement x="390" y="0" width="115" height="22" forecolor="#EA580C"/>
+                            <textElement textAlignment="Right" verticalAlignment="Middle"><font isBold="true"/></textElement>
+                            <textFieldExpression><![CDATA[$F{media} != null ? $F{media} + "%" : "sem dados"]]></textFieldExpression>
+                        </textField>
+                        <line>
+                            <reportElement x="0" y="21" width="515" height="1" forecolor="#F1F5F9"/>
+                            <graphicElement><pen lineWidth="0.75"/></graphicElement>
+                        </line>
+                    </jr:listContents>
+                </jr:list>
+            </componentElement>
+
+            <!-- Seção: tentativas -->
+            <staticText>
+                <reportElement positionType="Float" x="0" y="248" width="300" height="18" forecolor="#172554"/>
+                <textElement verticalAlignment="Middle"><font size="11" isBold="true"/></textElement>
+                <text><![CDATA[Tentativas]]></text>
+            </staticText>
+            <textField>
+                <reportElement positionType="Float" x="300" y="248" width="215" height="18" forecolor="#94A3B8"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="8"/></textElement>
+                <textFieldExpression><![CDATA[($P{TOTAL_PARTICIPANTES} != null ? $P{TOTAL_PARTICIPANTES} : 0L) + " registros"]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="24">
+            <rectangle>
+                <reportElement mode="Opaque" x="0" y="0" width="515" height="24" backcolor="#F8FAFC"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="0" y="0" width="150" height="24" forecolor="#64748B"/>
+                <box leftPadding="8"/>
+                <textElement verticalAlignment="Middle"><font size="7" isBold="true"/></textElement>
+                <text><![CDATA[PARTICIPANTE]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="150" y="0" width="35" height="24" forecolor="#64748B"/>
+                <textElement verticalAlignment="Middle"><font size="7" isBold="true"/></textElement>
+                <text><![CDATA[IDADE]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="185" y="0" width="70" height="24" forecolor="#64748B"/>
+                <textElement verticalAlignment="Middle"><font size="7" isBold="true"/></textElement>
+                <text><![CDATA[ESCOLARIDADE]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="255" y="0" width="95" height="24" forecolor="#64748B"/>
+                <textElement verticalAlignment="Middle"><font size="7" isBold="true"/></textElement>
+                <text><![CDATA[EXPERIÊNCIA]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="350" y="0" width="62" height="24" forecolor="#64748B"/>
+                <textElement verticalAlignment="Middle"><font size="7" isBold="true"/></textElement>
+                <text><![CDATA[STATUS]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="412" y="0" width="58" height="24" forecolor="#64748B"/>
+                <textElement verticalAlignment="Middle"><font size="7" isBold="true"/></textElement>
+                <text><![CDATA[INÍCIO]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="470" y="0" width="45" height="24" forecolor="#64748B"/>
+                <box rightPadding="8"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="7" isBold="true"/></textElement>
+                <text><![CDATA[ACERTOS]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="24">
+            <textField>
+                <reportElement x="0" y="0" width="150" height="24" forecolor="#172554"/>
+                <box leftPadding="8"/>
+                <textElement verticalAlignment="Middle"><font size="8.5" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="150" y="0" width="35" height="24"/>
+                <textElement verticalAlignment="Middle"><font size="8"/></textElement>
+                <textFieldExpression><![CDATA[$F{idade}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="185" y="0" width="70" height="24"/>
+                <textElement verticalAlignment="Middle"><font size="8"/></textElement>
+                <textFieldExpression><![CDATA[$F{escolaridade}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="255" y="0" width="95" height="24"/>
+                <textElement verticalAlignment="Middle"><font size="8"/></textElement>
+                <textFieldExpression><![CDATA[$F{experiencia}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement style="Status" x="350" y="0" width="62" height="24"/>
+                <textElement verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="412" y="0" width="58" height="24"/>
+                <textElement verticalAlignment="Middle"><font size="8"/></textElement>
+                <textFieldExpression><![CDATA[$F{inicio}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="470" y="0" width="45" height="24" forecolor="#172554"/>
+                <box rightPadding="8"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="8.5" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$F{acertos}]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="0" y="23" width="515" height="1" forecolor="#F1F5F9"/>
+                <graphicElement><pen lineWidth="0.75"/></graphicElement>
+            </line>
+        </band>
+    </detail>
+
+    <pageFooter>
+        <band height="28">
+            <line>
+                <reportElement x="0" y="6" width="515" height="1" forecolor="#E2E8F0"/>
+                <graphicElement><pen lineWidth="0.75"/></graphicElement>
+            </line>
+            <staticText>
+                <reportElement x="0" y="12" width="300" height="14" forecolor="#94A3B8"/>
+                <textElement verticalAlignment="Middle"><font size="7.5"/></textElement>
+                <text><![CDATA[Projeto de curricularização · ADS · FEMA]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="355" y="12" width="130" height="14" forecolor="#94A3B8"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="7.5"/></textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de"]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement x="485" y="12" width="30" height="14" forecolor="#94A3B8"/>
+                <textElement verticalAlignment="Middle"><font size="7.5"/></textElement>
+                <textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>
